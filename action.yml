@@ -1,0 +1,71 @@
+name: 'Discord Commit Notifications'
+description: 'Send commit info and artifacts to Discord via webhook'
+author: 'ByteLabs'
+
+inputs:
+  webhook-url:
+    description: 'Discord webhook URL'
+    required: true
+  file-path:
+    description: 'Optional file path to upload'
+    required: false
+    default: ''
+  embed-color:
+    description: 'Embed color in hex format (e.g., 0x3498db)'
+    required: false
+    default: '0x3498db'
+  embed-title:
+    description: 'Custom embed title'
+    required: false
+    default: 'New commit pushed'
+  username:
+    description: 'Override Discord webhook username'
+    required: false
+    default: ''
+  avatar-url:
+    description: 'Override Discord webhook avatar URL'
+    required: false
+    default: ''
+  include-author:
+    description: 'Include author info in the embed'
+    required: false
+    default: 'true'
+  include-branch:
+    description: 'Include branch info in the embed'
+    required: false
+    default: 'true'
+  include-repo:
+    description: 'Include repository info in the embed'
+    required: false
+    default: 'true'
+  include-pr-number:
+    description: 'Include pull request number in the embed (only for pull_request events)'
+    required: false
+    default: 'true'
+
+outputs:
+  status:
+    description: 'Status of the Discord notification'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Send Discord Notification
+      shell: bash
+      run: ${{ github.action_path }}/send-discord-notification.sh
+      env:
+        WEBHOOK_URL: ${{ inputs.webhook-url }}
+        FILE_PATH: ${{ inputs.file-path }}
+        EMBED_COLOR: ${{ inputs.embed-color }}
+        EMBED_TITLE: ${{ inputs.embed-title }}
+        USERNAME: ${{ inputs.username }}
+        AVATAR_URL: ${{ inputs.avatar-url }}
+        INCLUDE_AUTHOR: ${{ inputs.include-author }}
+        INCLUDE_BRANCH: ${{ inputs.include-branch }}
+        INCLUDE_REPO: ${{ inputs.include-repo }}
+        INCLUDE_PR_NUMBER: ${{ inputs.include-pr-number }}
+        GITHUB_TOKEN: ${{ github.token }}
+
+branding:
+  icon: 'send'
+  color: 'purple'
